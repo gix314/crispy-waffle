@@ -48,3 +48,4 @@ if config then
 else
     warn("Failed to load script after " .. maxAttempts .. " attempts.")
 end
+end
