@@ -1,51 +1,50 @@
 repeat task.wait() until game:IsLoaded()
-repeat task.wait() until game.GameId ~= nil
+repeat task.wait() until game.GameId ~= 0
 
 local PlaceId = game.PlaceId
 
 local gameConfigs = {
-    [99684056491472] = {Name = "Sailor Piece - Rune", Id = "Dungeon"},
-    [75159314259063] = {Name = "Sailor Piece - Cid", Id = "Dungeon"},
-    [77747658251236] = {Name = "Sailor Piece - Main", Id = "Main"},
-    [96767841099256] = {Name = "Sailor Piece - BossRush", Id = "Dungeon"},
-    [123955125827131] = {Name = "Sailor Piece - Double", Id = "Dungeon"}
+    [77747658251236] = {Name = "Sailor Piece - Main",   Id = "88b7af606e9ad28e802160016a410a80.lua"},
+
+    [99684056491472] = {Name = "Sailor Piece - Rune",   Id = "dab714a37f9f0ad1fee40523e2cc22a3.lua"},
+    [75159314259063] = {Name = "Sailor Piece - Cid",    Id = "dab714a37f9f0ad1fee40523e2cc22a3.lua"},
+    [123955125827131] = {Name = "Sailor Piece - DoubleDungeon", Id = "dab714a37f9f0ad1fee40523e2cc22a3.lua"},
+    [96767841099256] = {Name = "Sailor Piece - BossRush", Id = "dab714a37f9f0ad1fee40523e2cc22a3.lua"},
+    [138368689293913] = {Name = "Sailor Piece - Tower", Id = "dab714a37f9f0ad1fee40523e2cc22a3.lua"},
+
+--    [84988808589910] = {Name = "Rogue Piece - Main", Id = ""},
+--    [96105075537655] = {Name = "Rogue Piece - Dungeon", Id = ""},
 }
 
 local config = gameConfigs[PlaceId]
 
 if config then
-    local scriptUrl = ""
-    
-    if config.Id == "Main" then
-        scriptUrl = "https://api.getpolsec.com/scripts/hosted/87784e292c14640c619d8b007742d7ea4dbf744c0576e368d1e1c04ac3658188.lua"
-    elseif config.Id == "Dungeon" then
-        scriptUrl = "https://api.getpolsec.com/scripts/hosted/38ceee4df1da761a9a3d13cdf6b7f309f8a82220de014927f474bd298dab2a25.lua"
-    end
+    local success = false
+    local scriptContent = ""
+    local attempts = 0
+    local maxAttempts = 5
 
-    local function safeLoad(url)
-        local success, content = pcall(game.HttpGet, game, url)
-        
-        if success and content and #content > 0 then
-            local executable, loadError = loadstring(content)
-            
-            if executable then
-                task.spawn(executable)
-                return true
-            else
-                warn("Failed to compile script: " .. tostring(loadError))
-            end
+    while not success and attempts < maxAttempts do
+        attempts = attempts + 1
+        local ok, result = pcall(function()
+            return game:HttpGet("https://api.luarmor.net/files/v4/loaders/" .. config.Id)
+        end)
+
+        if ok and result then
+            success = true
+            scriptContent = result
         else
-            warn("Failed to fetch script from: " .. url)
+            task.wait(2)
         end
-        
-        return false
     end
 
-    if not safeLoad(scriptUrl) then
-        game:GetService("StarterGui"):SetCore("SendNotification", {
-            Title = "WAHHHH",
-            Text = "Failed to load script for " .. config.Name,
-            Duration = 5
-        })
+ if success and scriptContent ~= "" then
+    local func, err = loadstring(scriptContent)
+    if func then
+        func()
+    else
+        warn("Syntax error in loaded script: " .. tostring(err))
     end
+else
+    warn("Failed to load script after " .. maxAttempts .. " attempts.")
 end
