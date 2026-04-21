@@ -3,7 +3,7 @@ local placeId = game.PlaceId
 local baseUrl = "https://naughty-kitty.sadacat.workers.dev/"
 
 if placeId == 77747658251236 or placeId == 130167267952199 then
-    local githubUrl = "https://raw.githubusercontent.com/gix314/crispy-waffle/refs/heads/main/sc/2jtesafSai_125uansfM.lua"
+    local githubUrl = "https://auth.syscure.vip/obf/b073e39ac89301c8a678322c04fb552a.lua"
     
     local success, result = pcall(function()
         return game:HttpGet(githubUrl)
