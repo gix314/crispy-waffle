@@ -3,7 +3,7 @@ local placeId = game.PlaceId
 local baseUrl = "https://naughty-kitty.sadacat.workers.dev/"
 
 if placeId == 77747658251236 or placeId == 130167267952199 then
-    local githubUrl = "https://auth.syscure.vip/obf/b073e39ac89301c8a678322c04fb552a.lua"
+    local githubUrl = "https://api.jnkie.com/api/v1/luascripts/public/52d7bb3829a25a2f9b476d1eb84c8d1d4271fda532b61574b926dd7cd2e9d3e9/download"
     
     local success, result = pcall(function()
         return game:HttpGet(githubUrl)
