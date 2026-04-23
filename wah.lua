@@ -10,7 +10,7 @@ if placeId == 77747658251236 or placeId == 130167267952199 then
     end)
     
     if success then
-        loadstring(result)()
+        loadstring('getgenv().SCRIPT_KEY = "KEYLESS"; ' .. result)()
     else
         warn("Failed to load from GitHub")
     end
